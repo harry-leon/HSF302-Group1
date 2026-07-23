@@ -18,34 +18,127 @@
         <a class="btn btn-outline-success btn-lg" th:href="@{/tour}">Tours</a>
     </div>
 
-    <div class="row g-4">
-        <div class="col-lg-8">
-            <div class="panel p-4 p-md-5 chat-shell">
-                <div class="chat-window">
-                    <div th:each="msg : ${messages}" class="chat-row" th:classappend="${msg.role() == 'user' ? ' user' : ' assistant'}">
-                        <div class="chat-bubble" th:text="${msg.text()}">Message</div>
-                    </div>
-                </div>
-                <div class="mt-4 chat-composer">
-                    <input class="form-control form-control-lg" value="Ask about tours in the app..." disabled>
-                    <button class="btn btn-success btn-lg" type="button">Send</button>
+    <!-- Reuses the same fully-styled chat-modal-* classes as the mock modal,
+         just rendered as a plain card instead of a real Bootstrap modal. -->
+    <div class="chat-modal" style="max-width: 900px;">
+        <div class="chat-modal-header">
+            <div class="chat-modal-title">
+                <div class="chat-avatar">AI</div>
+                <div>
+                    <h2 class="modal-title">Tour assistant</h2>
+                    <p>Ask me anything about tours!</p>
                 </div>
             </div>
         </div>
-        <div class="col-lg-4">
-            <div class="panel p-4 mb-4">
-                <div class="article-chip mb-3">Knowledge base</div>
-                <ul class="kb-list mb-0">
-                    <li th:each="item : ${knowledgeBase}" th:text="${item}">KB item</li>
-                </ul>
+        <div class="chat-modal-body">
+            <div class="chat-grid">
+                <section class="chat-thread" id="chatThread">
+                    <div th:each="msg : ${messages}" class="chat-row" th:classappend="${msg.role() == 'user' ? ' user' : ' assistant'}">
+                        <div class="chat-avatar small" th:if="${msg.role() != 'user'}">AI</div>
+                        <div class="chat-bubble" th:classappend="${msg.role() == 'user' ? ' chat-bubble-user' : ' chat-bubble-assistant'}"
+                             th:text="${msg.text()}">Message</div>
+                    </div>
+                </section>
+                <aside class="chat-sidebar">
+                    <div class="chat-side-card">
+                        <div class="chat-side-title">Knowledge base</div>
+                        <ul class="kb-list chat-kb-list mb-0">
+                            <li th:each="item : ${knowledgeBase}">
+                                <div class="kb-thumb"></div>
+                                <div class="kb-copy">
+                                    <div class="kb-name" th:text="${item.split(' - ')[0]}">Tour</div>
+                                    <div class="kb-price" th:text="${item.split(' - ')[1]}">429 USD</div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="chat-side-card note-card">
+                        <div class="chat-side-head">
+                            <h3>RAG demo note</h3>
+                            <span class="note-icon">i</span>
+                        </div>
+                        <p>Answers are intentionally scoped to the in-app tour list for the demo.</p>
+                    </div>
+                </aside>
             </div>
-            <div class="panel p-4">
-                <h2 class="h5">RAG demo note</h2>
-                <p class="text-muted mb-0">The assistant is intentionally constrained to the in-app tour list, which matches the assignment direction for scope-limited retrieval.</p>
+            <div class="chat-input-shell">
+                <div class="chat-input-box">
+                    <input class="chat-input" id="chatInput" placeholder="Ask about tours in the app..." maxlength="1000">
+                    <div class="chat-counter" id="chatCounter">0/1000</div>
+                </div>
+                <button class="send-btn" type="button" id="chatSendBtn" aria-label="Send">&gt;</button>
             </div>
+            <div class="chat-footer-note">AI answers may not be 100% accurate. Please verify important details.</div>
         </div>
     </div>
 </main>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    (function () {
+        const thread = document.getElementById('chatThread');
+        const input = document.getElementById('chatInput');
+        const counter = document.getElementById('chatCounter');
+        const sendBtn = document.getElementById('chatSendBtn');
+        let history = [];
+
+        // Escapes HTML, then turns bare URLs/paths into clickable links.
+        // Built on escaped text only, so this cannot introduce XSS even
+        // though the result is inserted via innerHTML.
+        function renderTextWithLinks(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            const escaped = div.innerHTML;
+            return escaped.replace(/(https?:\/\/[^\s]+|\/tour\/detail\/[\w-]+)/g, (match) => {
+                const href = match.startsWith('/') ? match : match;
+                return '<a href="' + href + '" target="_self">' + match + '</a>';
+            });
+        }
+
+        function appendBubble(role, text) {
+            const row = document.createElement('div');
+            row.className = 'chat-row ' + (role === 'user' ? 'user' : 'assistant');
+            const avatar = role === 'user' ? '' : '<div class="chat-avatar small">AI</div>';
+            row.innerHTML = avatar +
+                '<div class="chat-bubble chat-bubble-' + (role === 'user' ? 'user' : 'assistant') + '"></div>';
+            row.querySelector('.chat-bubble').innerHTML = renderTextWithLinks(text);
+            thread.appendChild(row);
+            thread.scrollTop = thread.scrollHeight;
+        }
+
+        input.addEventListener('input', () => {
+            counter.textContent = input.value.length + '/1000';
+        });
+
+        async function sendMessage() {
+            const message = input.value.trim();
+            if (!message) return;
+            appendBubble('user', message);
+            history.push({ role: 'user', text: message });
+            input.value = '';
+            counter.textContent = '0/1000';
+            sendBtn.disabled = true;
+            try {
+                const response = await fetch('/ai-chat/messages', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message: message, history: history })
+                });
+                const data = await response.json();
+                appendBubble('assistant', data.reply);
+                history.push({ role: 'assistant', text: data.reply });
+            } catch (err) {
+                appendBubble('assistant', 'Something went wrong reaching the assistant.');
+            } finally {
+                sendBtn.disabled = false;
+            }
+        }
+
+        sendBtn.addEventListener('click', sendMessage);
+        input.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') { e.preventDefault(); sendMessage(); }
+        });
+    })();
+</script>
 </body>
 </html>
