@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Tour Detail</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link th:href="@{/css/app.css}" rel="stylesheet">
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark topbar sticky-top">
+    <div class="container">
+        <a class="navbar-brand fw-bold" th:href="@{/}">Dieu Dao Travel</a>
+        <div class="navbar-nav ms-auto">
+            <a class="nav-link" th:href="@{/tour}">Tours</a>
+            <a class="nav-link" th:href="@{/tour/blog}">Blog</a>
+            <a class="nav-link" th:href="@{/tour/chat}">AI Chat</a>
+        </div>
+    </div>
+</nav>
+
+<main class="container py-5">
+    <div class="page-head row g-4 align-items-stretch">
+        <div class="col-lg-7">
+            <div class="panel p-4 p-md-5">
+                <span class="eyebrow">Tour detail</span>
+                <h1 class="fw-bold mt-2" th:text="${tour.name()}">Tour</h1>
+                <p class="text-muted" th:text="${tour.summary()}">Summary</p>
+                <div class="d-flex flex-wrap gap-2 mb-4">
+                    <span class="badge rounded-pill text-bg-light px-3 py-2" th:text="${tour.location()}">Location</span>
+                    <span class="rating-pill" th:text="${tour.rating() + ' stars'}">4.9 stars</span>
+                </div>
+                <h2 class="h5 mt-4">Highlights</h2>
+                <div class="highlight-grid">
+                    <div class="highlight-item" th:each="item : ${highlights}" th:text="${item}">Highlight</div>
+                </div>
+                <div class="mt-4">
+                    <a class="btn btn-success btn-lg" th:href="@{'/tour/book/' + ${tour.id()}}">Continue to booking</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-5">
+            <div class="panel overflow-hidden tour-side-card">
+                <img class="img-fluid" src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1200&q=80" alt="Tour image">
+                <div class="p-4">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="text-muted">Starting at</span>
+                        <span class="fs-3 fw-bold text-success" th:text="${'$' + tour.price()}">$429</span>
+                    </div>
+                    <p class="mb-0 text-muted">Visual proof that the prototype can combine content, layout, and click paths.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

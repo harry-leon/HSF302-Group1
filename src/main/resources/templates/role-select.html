@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Select Role</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link th:href="@{/css/app.css}" rel="stylesheet">
+</head>
+<body>
+<main class="container py-5">
+    <div class="role-landing mx-auto">
+        <div class="text-center mb-5">
+            <span class="eyebrow text-dark">Prototype entry</span>
+            <h1 class="display-5 fw-bold mt-3">Choose your experience</h1>
+            <p class="lead text-muted mb-0">Open the customer flow or the admin dashboard from the localhost home page.</p>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-6">
+                <a class="role-card role-customer text-decoration-none" th:href="@{/tour}">
+                    <div class="role-badge">Customer</div>
+                    <h2 class="h3 mt-3 text-white">Browse and book tours</h2>
+                    <p class="text-white-75 mb-4">View packages, open the AI popup, read rich blog content, and complete a booking demo.</p>
+                    <span class="btn btn-light fw-semibold">Enter customer view</span>
+                </a>
+            </div>
+            <div class="col-md-6">
+                <a class="role-card role-admin text-decoration-none" th:href="@{/tour/admin}">
+                    <div class="role-badge">Admin</div>
+                    <h2 class="h3 mt-3 text-white">Manage tour CRUD</h2>
+                    <p class="text-white-75 mb-4">Create, edit, and delete tours in an admin dashboard backed by in-memory demo data.</p>
+                    <span class="btn btn-warning fw-semibold">Enter admin view</span>
+                </a>
+            </div>
+        </div>
+    </div>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
