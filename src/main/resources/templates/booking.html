@@ -12,63 +12,105 @@
     <div class="container">
         <a class="navbar-brand fw-bold" th:href="@{/}">Dieu Dao Travel</a>
         <div class="navbar-nav ms-auto">
-            <a class="nav-link" th:href="@{/tour}">Tours</a>
+            <a class="nav-link active" th:href="@{/tour}">Tours</a>
             <a class="nav-link" th:href="@{/tour/blog}">Blog</a>
             <a class="nav-link" th:href="@{/tour/chat}">AI Chat</a>
+            <a class="btn btn-outline-light btn-sm ms-lg-2" th:href="@{/logout}">Đăng xuất</a>
         </div>
     </div>
 </nav>
 
-<main class="container py-5">
-    <div class="panel p-4 p-md-5 mx-auto booking-shell" style="max-width: 900px;">
-        <div class="row g-4">
-            <div class="col-lg-5">
-                <span class="eyebrow">Booking flow</span>
-                <h1 class="fw-bold mt-2" th:text="${tour.name()}">Tour</h1>
-                <p class="text-muted" th:text="${tour.summary()}">Summary</p>
-                <div class="price-box">
-                    <div class="small text-muted">Total demo price</div>
-                    <div class="fs-2 fw-bold text-success" th:text="${'$' + tour.price()}">$429</div>
+<main class="booking-page">
+    <div class="container">
+        <nav class="tour-breadcrumb" aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item">
+                    <a th:href="@{/}">
+                        <span class="breadcrumb-icon">⌂</span>
+                        Home
+                    </a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a th:href="@{/tour}">Tours</a>
+                </li>
+                <li class="breadcrumb-item active" aria-current="page" th:text="${'Book ' + tour.name()}">Book Sapa 3N2D</li>
+            </ol>
+        </nav>
+
+        <div class="booking-shell">
+            <aside class="panel booking-side-card">
+                <div class="booking-image">
+                    <img src="https://images.unsplash.com/photo-1504257432389-52343af06ae3?auto=format&fit=crop&w=1200&q=80" alt="Tour image">
                 </div>
-                <div class="progress-steps mt-4">
+                <h1 th:text="${tour.name()}">Sapa 3N2D</h1>
+                <p class="booking-summary" th:text="${tour.summary()}">Mountain views, local market, and cable car.</p>
+                <div class="booking-badges">
+                    <span class="location-pill">Sapa, Vietnam</span>
+                    <span class="booking-rating">★ <span th:text="${tour.rating()}">4.9</span> stars</span>
+                </div>
+                <hr class="booking-divider">
+                <div class="booking-price-box">
+                    <div class="booking-price-label">Total demo price</div>
+                    <div class="booking-price" th:text="${'$' + tour.price()}">$429</div>
+                </div>
+                <div class="progress-steps booking-steps">
                     <div class="step active">1. Details</div>
-                    <div class="step active">2. Payment</div>
+                    <div class="step">2. Payment</div>
                     <div class="step">3. Confirm</div>
                 </div>
-            </div>
-            <div class="col-lg-7">
-                <form class="row g-3" th:action="@{/tour/checkout}" method="post">
+            </aside>
+
+            <section class="panel booking-form-card">
+                <div class="booking-form-head">
+                    <h2>1. Details</h2>
+                    <p>Please provide your booking information.</p>
+                </div>
+
+                <form class="booking-form-grid" th:action="@{/tour/checkout}" method="post">
                     <input type="hidden" name="tourId" th:value="${tour.id()}">
-                    <div class="col-md-6">
+
+                    <div class="form-field">
                         <label class="form-label">Full name</label>
-                        <input class="form-control" name="fullName" value="Nguyen Van A" required>
+                        <input class="form-control booking-control" name="fullName" value="Nguyen Van A" required>
                     </div>
-                    <div class="col-md-6">
+                    <div class="form-field">
                         <label class="form-label">Email</label>
-                        <input class="form-control" type="email" name="email" value="demo@example.com" required>
+                        <input class="form-control booking-control" type="email" name="email" value="demo@example.com" required>
                     </div>
-                    <div class="col-md-4">
+                    <div class="form-field travelers-field">
                         <label class="form-label">Travelers</label>
-                        <input class="form-control" type="number" min="1" max="9" name="travelers" value="2" required>
+                        <div class="traveler-stepper">
+                            <button type="button" class="stepper-btn" disabled>−</button>
+                            <input class="stepper-input" type="number" min="1" max="9" name="travelers" value="2" required>
+                            <button type="button" class="stepper-btn" disabled>+</button>
+                        </div>
                     </div>
-                    <div class="col-md-8">
+                    <div class="form-field">
                         <label class="form-label">Payment method</label>
-                        <select class="form-select" name="paymentMethod">
+                        <select class="form-select booking-control booking-select" name="paymentMethod">
                             <option>Mock card payment</option>
                             <option>VNPay sandbox</option>
                             <option>Momo sandbox</option>
                         </select>
                     </div>
-                    <div class="col-12">
-                        <label class="form-label">Note</label>
-                        <textarea class="form-control" rows="4">This is a UI-only booking demo.</textarea>
+                    <div class="form-field full-width">
+                        <label class="form-label">Note (optional)</label>
+                        <textarea class="form-control booking-control booking-textarea" rows="5">This is a UI-only booking demo.</textarea>
                     </div>
-                    <div class="col-12 d-flex gap-2">
-                        <button class="btn btn-success btn-lg" type="submit">Proceed to payment</button>
-                        <a class="btn btn-outline-secondary btn-lg" th:href="@{/tour}">Back</a>
+
+                    <div class="booking-divider-line full-width"></div>
+
+                    <div class="booking-actions full-width">
+                        <button class="btn btn-success btn-lg booking-submit" type="submit">Proceed to payment <span>→</span></button>
+                        <a class="btn btn-outline-secondary btn-lg booking-back" th:href="@{/tour}">Back</a>
+                    </div>
+
+                    <div class="booking-security full-width">
+                        <span class="security-icon">✔</span>
+                        <span>Your information is secure and will only be used for this demo.</span>
                     </div>
                 </form>
-            </div>
+            </section>
         </div>
     </div>
 </main>

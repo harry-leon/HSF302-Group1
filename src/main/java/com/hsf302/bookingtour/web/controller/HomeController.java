@@ -12,4 +12,9 @@ public class HomeController {
     public String home() {
         return "role-select";
     }
+
+    @GetMapping("/logout")
+    public String logout() {
+        return "redirect:/";
+    }
 }

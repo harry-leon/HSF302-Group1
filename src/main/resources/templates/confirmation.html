@@ -8,47 +8,139 @@
     <link th:href="@{/css/app.css}" rel="stylesheet">
 </head>
 <body>
-<main class="container py-5">
-    <div class="panel p-5 mx-auto confirmation-shell" style="max-width: 760px;">
-        <div class="badge text-bg-success mb-3">Payment success demo</div>
-        <h1 class="fw-bold">Booking confirmed</h1>
-        <p class="text-muted" th:text="${checkoutMessage ?: 'Mock payment approved and booking stored in demo state.'}">Success message</p>
-        <div class="success-banner my-4">
-            <div class="success-dot"></div>
-            <div>
-                <div class="fw-semibold">Your itinerary is locked in</div>
-                <div class="text-muted small">This is a frontend-only confirmation state for presentation.</div>
-            </div>
-        </div>
-        <div class="row g-3">
-            <div class="col-md-6">
-                <div class="info-box">
-                    <div class="small text-muted">Tour</div>
-                    <div class="fw-semibold" th:text="${checkoutTour != null ? checkoutTour.name() : 'Sapa 3N2Đ'}">Tour</div>
+<main class="confirmation-page">
+    <div class="container">
+        <div class="confirmation-shell">
+            <section class="confirmation-main panel">
+                <div class="confirmation-mark">
+                    <div class="confirmation-check">✓</div>
+                    <div class="confetti confetti-a"></div>
+                    <div class="confetti confetti-b"></div>
+                    <div class="confetti confetti-c"></div>
+                    <div class="confetti confetti-d"></div>
                 </div>
-            </div>
-            <div class="col-md-6">
-                <div class="info-box">
-                    <div class="small text-muted">Travelers</div>
-                    <div class="fw-semibold" th:text="${checkoutTravelers ?: 2}">2</div>
+                <div class="confirmation-pill">Payment success demo</div>
+                <h1>Booking confirmed!</h1>
+                <p class="confirmation-lead" th:text="${checkoutMessage ?: 'Mock payment approved and booking stored in demo state.'}">
+                    Mock payment approved for Nguyen Van A on Sapa 3N2D via Mock card payment.
+                </p>
+
+                <div class="confirmation-highlight">
+                    <div class="highlight-icon">🔒</div>
+                    <div>
+                        <div class="highlight-title">Your itinerary is locked in</div>
+                        <div class="highlight-text">This is a frontend-only confirmation state for presentation.</div>
+                    </div>
                 </div>
-            </div>
-            <div class="col-md-6">
-                <div class="info-box">
-                    <div class="small text-muted">Email</div>
-                    <div class="fw-semibold" th:text="${checkoutEmail ?: 'demo@example.com'}">demo@example.com</div>
+
+                <div class="confirmation-details">
+                    <div class="detail-row">
+                        <div class="detail-icon">🎟</div>
+                        <div class="detail-copy">
+                            <div class="detail-label">Tour</div>
+                            <div class="detail-value" th:text="${checkoutTour != null ? checkoutTour.name() : 'Sapa 3N2D'}">Sapa 3N2D</div>
+                        </div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-icon">👤</div>
+                        <div class="detail-copy">
+                            <div class="detail-label">Travelers</div>
+                            <div class="detail-value" th:text="${checkoutTravelers ?: 2}">2</div>
+                        </div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-icon">✉</div>
+                        <div class="detail-copy">
+                            <div class="detail-label">Email</div>
+                            <div class="detail-value" th:text="${checkoutEmail ?: 'demo@example.com'}">demo@example.com</div>
+                        </div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-icon">➤</div>
+                        <div class="detail-copy">
+                            <div class="detail-label">Next action</div>
+                            <div class="detail-value">Send voucher email</div>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <div class="col-md-6">
-                <div class="info-box">
-                    <div class="small text-muted">Next action</div>
-                    <div class="fw-semibold">Send voucher email</div>
+
+                <div class="confirmation-actions">
+                    <a class="btn btn-confirm-primary" th:href="@{/tour}">Back to tours</a>
+                    <a class="btn btn-confirm-secondary" th:href="@{/tour/blog}">View blog</a>
                 </div>
-            </div>
-        </div>
-        <div class="mt-4 d-flex gap-2">
-            <a class="btn btn-success" th:href="@{/tour}">Back to tours</a>
-            <a class="btn btn-outline-success" th:href="@{/tour/blog}">View blog</a>
+            </section>
+
+            <aside class="confirmation-side">
+                <div class="panel summary-card">
+                    <div class="summary-head">
+                        <div class="summary-title">
+                            <span class="summary-icon">🧾</span>
+                            <h2>Payment summary</h2>
+                        </div>
+                    </div>
+
+                    <div class="summary-line">
+                        <span>Tour price (2 x $429)</span>
+                        <span>$858.00</span>
+                    </div>
+                    <div class="summary-line">
+                        <span>Taxes & fees <span class="mini-info">i</span></span>
+                        <span>$34.00</span>
+                    </div>
+                    <div class="summary-line discount">
+                        <span>Discount</span>
+                        <span>-$60.00</span>
+                    </div>
+
+                    <div class="summary-total">
+                        <span>Total paid</span>
+                        <span>$832.00 USD</span>
+                    </div>
+
+                    <hr class="summary-divider">
+
+                    <div class="summary-section">
+                        <div class="summary-title">
+                            <span class="summary-icon">💳</span>
+                            <h3>Payment method</h3>
+                        </div>
+                        <div class="payment-method-row">
+                            <div class="card-brand">
+                                <span class="card-dot red"></span>
+                                <span class="card-dot yellow"></span>
+                            </div>
+                            <div class="payment-copy">
+                                <div>Mock card</div>
+                                <div class="masked-card">.... .... .... 4242</div>
+                            </div>
+                            <span class="approved-badge">Approved</span>
+                        </div>
+                        <div class="transaction-grid">
+                            <div class="transaction-label">Transaction ID</div>
+                            <div class="transaction-value">MOCK-1715912345678</div>
+                            <div class="transaction-label">Paid on</div>
+                            <div class="transaction-value">May 17, 2024 10:30 AM</div>
+                        </div>
+                    </div>
+
+                    <div class="secure-box">
+                        <div class="secure-title">
+                            <span class="secure-icon">🛡</span>
+                            <span>Secure payment</span>
+                        </div>
+                        <p>This is a mock payment for demo purposes only. No real transaction was processed.</p>
+                    </div>
+                </div>
+
+                <div class="panel help-card">
+                    <div class="help-title">
+                        <span class="help-icon">🎧</span>
+                        <h3>Need help?</h3>
+                    </div>
+                    <p>Contact our support team if you have any questions about your booking.</p>
+                    <a href="javascript:void(0)" class="help-link">Contact support <span>→</span></a>
+                </div>
+            </aside>
         </div>
     </div>
 </main>

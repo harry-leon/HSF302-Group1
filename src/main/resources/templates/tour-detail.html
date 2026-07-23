@@ -12,44 +12,106 @@
     <div class="container">
         <a class="navbar-brand fw-bold" th:href="@{/}">Dieu Dao Travel</a>
         <div class="navbar-nav ms-auto">
-            <a class="nav-link" th:href="@{/tour}">Tours</a>
+            <a class="nav-link active" th:href="@{/tour}">Tours</a>
             <a class="nav-link" th:href="@{/tour/blog}">Blog</a>
-            <a class="nav-link" th:href="@{/tour/chat}">AI Chat</a>
+            <a class="nav-link" th:href="@{/tour(chat=1)}">AI Chat</a>
+            <a class="btn btn-outline-light btn-sm ms-lg-2" th:href="@{/logout}">Đăng xuất</a>
         </div>
     </div>
 </nav>
 
-<main class="container py-5">
-    <div class="page-head row g-4 align-items-stretch">
-        <div class="col-lg-7">
-            <div class="panel p-4 p-md-5">
-                <span class="eyebrow">Tour detail</span>
-                <h1 class="fw-bold mt-2" th:text="${tour.name()}">Tour</h1>
-                <p class="text-muted" th:text="${tour.summary()}">Summary</p>
-                <div class="d-flex flex-wrap gap-2 mb-4">
-                    <span class="badge rounded-pill text-bg-light px-3 py-2" th:text="${tour.location()}">Location</span>
-                    <span class="rating-pill" th:text="${tour.rating() + ' stars'}">4.9 stars</span>
+<main class="tour-detail-page">
+    <div class="container">
+        <nav class="tour-breadcrumb" aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item">
+                    <a th:href="@{/}">
+                        <span class="breadcrumb-icon">⌂</span>
+                        Home
+                    </a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a th:href="@{/tour}">Tours</a>
+                </li>
+                <li class="breadcrumb-item active" aria-current="page" th:text="${tour.name()}">Sapa 3N2Đ</li>
+            </ol>
+        </nav>
+
+        <div class="tour-detail-grid">
+            <section class="panel detail-main-card">
+                <h1 th:text="${tour.name()}">Sapa 3N2Đ</h1>
+                <p class="detail-summary" th:text="${tour.summary()}">Mountain views, local market, and cable car.</p>
+
+                <div class="detail-meta">
+                    <span class="location-pill">📍 <span th:text="${tour.location()}">Sapa, Vietnam</span></span>
+                    <span class="detail-rating">★ <span th:text="${tour.rating()}">4.9</span> <span>(102 reviews)</span></span>
                 </div>
-                <h2 class="h5 mt-4">Highlights</h2>
-                <div class="highlight-grid">
-                    <div class="highlight-item" th:each="item : ${highlights}" th:text="${item}">Highlight</div>
-                </div>
-                <div class="mt-4">
-                    <a class="btn btn-success btn-lg" th:href="@{'/tour/book/' + ${tour.id()}}">Continue to booking</a>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-5">
-            <div class="panel overflow-hidden tour-side-card">
-                <img class="img-fluid" src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1200&q=80" alt="Tour image">
-                <div class="p-4">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <span class="text-muted">Starting at</span>
-                        <span class="fs-3 fw-bold text-success" th:text="${'$' + tour.price()}">$429</span>
+
+                <hr class="detail-divider">
+
+                <h2 class="detail-section-title">Highlights</h2>
+                <div class="detail-highlights">
+                    <div class="detail-highlight" th:each="item : ${highlights}">
+                        <div class="detail-highlight-icon">
+                            <span th:text="${item == 'Instant confirmation demo' ? '⚡' : (item == 'Flexible schedule' ? '🗓' : (item == 'Local guide support' ? '🗺' : '🏨'))}">⚡</span>
+                        </div>
+                        <div class="detail-highlight-body">
+                            <h3 th:text="${item == 'Instant confirmation demo' ? 'Instant confirmation' : (item == 'Flexible schedule' ? 'Flexible schedule' : (item == 'Local guide support' ? 'Local guide support' : 'Hotel and transfer included'))}">Instant confirmation</h3>
+                            <p th:text="${item == 'Instant confirmation demo' ? 'Book now and receive confirmation instantly.' : (item == 'Flexible schedule' ? 'Choose your preferred date and time.' : (item == 'Local guide support' ? 'Professional local guides with deep knowledge.' : 'Comfortable stay and round-trip transfer.'))}">Book now and receive confirmation instantly.</p>
+                        </div>
                     </div>
-                    <p class="mb-0 text-muted">Visual proof that the prototype can combine content, layout, and click paths.</p>
                 </div>
-            </div>
+
+                <a class="btn btn-detail-book" th:href="@{'/tour/book/' + ${tour.id()}}">
+                    <span class="btn-icon">🗓</span>
+                    Continue to booking
+                    <span class="btn-arrow">›</span>
+                </a>
+            </section>
+
+            <aside class="panel detail-side-card">
+                <div class="detail-hero-image">
+                    <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1200&q=80" alt="Tour image">
+                </div>
+
+                <div class="detail-price-row">
+                    <div class="detail-price-label">Starting at</div>
+                    <div class="detail-price" th:text="${'$' + tour.price()}">$429</div>
+                </div>
+
+                <p class="detail-note">
+                    Visual proof that the prototype can combine content, layout, and click paths.
+                </p>
+
+                <hr class="detail-divider">
+
+                <div class="detail-specs">
+                    <div class="detail-spec">
+                        <span class="detail-spec-icon">🕒</span>
+                        <span class="detail-spec-label">Duration</span>
+                        <span class="detail-spec-value">3 days 2 nights</span>
+                    </div>
+                    <div class="detail-spec">
+                        <span class="detail-spec-icon">👥</span>
+                        <span class="detail-spec-label">Group size</span>
+                        <span class="detail-spec-value">1 – 12 people</span>
+                    </div>
+                    <div class="detail-spec">
+                        <span class="detail-spec-icon">📊</span>
+                        <span class="detail-spec-label">Tour type</span>
+                        <span class="detail-spec-value">Private tour</span>
+                    </div>
+                    <div class="detail-spec">
+                        <span class="detail-spec-icon">🏷</span>
+                        <span class="detail-spec-label">Best for</span>
+                        <span class="detail-spec-value">Couples, Friends, Families</span>
+                    </div>
+                </div>
+
+                <a class="btn btn-wishlist" href="javascript:void(0)">
+                    ♡ Add to wishlist
+                </a>
+            </aside>
         </div>
     </div>
 </main>

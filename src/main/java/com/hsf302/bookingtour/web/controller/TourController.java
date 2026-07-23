@@ -86,23 +86,6 @@ public class TourController {
 
     @GetMapping("/blog")
     public String blog(Model model) {
-        model.addAttribute("posts", List.of(
-                new BlogPost("Packing list for Sapa", """
-                        <p>Use a warm jacket, comfortable shoes, and a light raincoat.</p>
-                        <p><strong>Tip:</strong> mix short text blocks with images to make the page feel editorial.</p>
-                        <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1200&q=80" class="img-fluid rounded-4 my-3" alt="Travel blog image">
-                        <p><em>This section is rendered from HTML so rich-text formatting is preserved.</em></p>
-                        """),
-                new BlogPost("Why travelers love Da Lat", """
-                        <p>Da Lat works well as a prototype screen because the content can alternate between text and images.</p>
-                        <ul>
-                            <li>Morning coffee</li>
-                            <li>Flower garden</li>
-                            <li>Weekend market</li>
-                        </ul>
-                        <p><span class="badge text-bg-warning text-dark">Rich text</span> and <span class="badge text-bg-info text-dark">embedded media</span> are visible on the page.</p>
-                        """)
-        ));
         return "blog";
     }
 
@@ -174,6 +157,5 @@ public class TourController {
     }
 
     record Tour(String id, String name, String location, int price, double rating, String summary) {}
-    record BlogPost(String title, String html) {}
     record ChatMessage(String role, String text) {}
 }
