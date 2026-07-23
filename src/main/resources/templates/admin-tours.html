@@ -39,6 +39,7 @@
         <table class="table align-middle table-hover">
             <thead class="table-light">
             <tr>
+                <th>Image</th>
                 <th>ID</th>
                 <th>Name</th>
                 <th>Location</th>
@@ -49,6 +50,9 @@
             </thead>
             <tbody>
             <tr th:each="tour : ${tours}">
+                <td>
+                    <img class="admin-thumb" th:src="${tour.imageUrl()}" th:alt="${tour.name()}">
+                </td>
                 <td th:text="${tour.id()}">t1</td>
                 <td class="fw-semibold" th:text="${tour.name()}">Name</td>
                 <td th:text="${tour.location()}">Location</td>

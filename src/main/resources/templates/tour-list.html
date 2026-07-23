@@ -15,7 +15,7 @@
             <a class="nav-link active" th:href="@{/tour}">Tours</a>
             <a class="nav-link" th:href="@{/tour/blog}">Blog</a>
             <a class="nav-link" th:href="@{/tour(chat=1)}">AI Chat</a>
-            <a class="btn btn-outline-light btn-sm ms-lg-2" th:href="@{/logout}">Đăng xuất</a>
+            <a class="btn btn-outline-light btn-sm ms-lg-2" th:href="@{/logout}">Dang xuat</a>
         </div>
     </div>
 </nav>
@@ -31,77 +31,18 @@
     </section>
 
     <section class="container tour-grid">
-        <article class="tour-card">
-            <div class="tour-image tour-image--sapa">
-                <span class="rating-pill">4.9</span>
+        <article class="tour-card" th:each="tour : ${tours}">
+            <div class="tour-image"
+                 th:style="${tour.imageUrl() != null && !tour.imageUrl().isBlank() ? 'background-image: linear-gradient(180deg, rgba(0,0,0,0.08), rgba(0,0,0,0.22)), url(' + tour.imageUrl() + ')' : ''}">
+                <span class="rating-pill" th:text="${tour.rating()}">4.9</span>
             </div>
             <div class="tour-card-body">
-                <span class="location-pill">Sapa, Vietnam</span>
-                <h2>Sapa 3N2D</h2>
-                <p>Mountain views, local market, and cable car.</p>
+                <span class="location-pill" th:text="${tour.location()}">Sapa, Vietnam</span>
+                <h2 th:text="${tour.name()}">Sapa 3N2D</h2>
+                <p th:text="${tour.summary()}">Mountain views, local market, and cable car.</p>
                 <div class="tour-card-footer">
-                    <div class="price">$429</div>
-                    <a class="btn btn-outline-tour" th:href="@{'/tour/detail/' + ${tours[0].id()}}">View details <span>&gt;</span></a>
-                </div>
-            </div>
-        </article>
-
-        <article class="tour-card">
-            <div class="tour-image tour-image--dalat">
-                <span class="rating-pill">4.8</span>
-            </div>
-            <div class="tour-card-body">
-                <span class="location-pill">Da Lat, Vietnam</span>
-                <h2>Da Lat Chill</h2>
-                <p>Coffee farms, pine hills, and lakeside sunsets.</p>
-                <div class="tour-card-footer">
-                    <div class="price">$319</div>
-                    <a class="btn btn-outline-tour" th:href="@{'/tour/detail/' + ${tours[1].id()}}">View details <span>&gt;</span></a>
-                </div>
-            </div>
-        </article>
-
-        <article class="tour-card">
-            <div class="tour-image tour-image--phuquoc">
-                <span class="rating-pill">4.7</span>
-            </div>
-            <div class="tour-card-body">
-                <span class="location-pill">Phu Quoc, Vietnam</span>
-                <h2>Phu Quoc Escape</h2>
-                <p>Beach resort, snorkeling, and night market.</p>
-                <div class="tour-card-footer">
-                    <div class="price">$559</div>
-                    <a class="btn btn-outline-tour" th:href="@{'/tour/detail/' + ${tours[2].id()}}">View details <span>&gt;</span></a>
-                </div>
-            </div>
-        </article>
-
-        <article class="tour-card">
-            <div class="tour-image tour-image--halong">
-                <span class="rating-pill">4.6</span>
-            </div>
-            <div class="tour-card-body">
-                <span class="location-pill">Ha Long Bay, Vietnam</span>
-                <h2>Ha Long Cruise</h2>
-                <p>Luxury cruise, cave visit, and sunset deck.</p>
-                <div class="tour-card-footer">
-                    <div class="price">$489</div>
-                    <a class="btn btn-outline-tour" th:href="@{'/tour/detail/' + ${tours[3].id()}}">View details <span>&gt;</span></a>
-                </div>
-            </div>
-        </article>
-
-        <article class="tour-card tour-card--maichau">
-            <div class="tour-image tour-image--maichau">
-                <span class="rating-pill">4.9</span>
-            </div>
-            <div class="tour-card-body">
-                <span class="location-pill">Mai Chau, Vietnam</span>
-                <h2>Mai Chau Trek</h2>
-                <p>Trekking, local culture, and homestay experience.</p>
-                <div class="tour-card-footer">
-                    <div class="price">$279</div>
-                    <a class="btn btn-outline-tour" th:href="@{'/tour/detail/' + ${tours[0].id()}}">View details <span>&gt;</span></a>
+                    <div class="price" th:text="${'$' + tour.price()}">$429</div>
+                    <a class="btn btn-outline-tour" th:href="@{'/tour/detail/' + ${tour.id()}}">View details <span>&gt;</span></a>
                 </div>
             </div>
         </article>
@@ -113,15 +54,15 @@
         <div class="modal-content chat-modal">
             <div class="modal-header chat-modal-header">
                 <div class="chat-modal-title">
-                    <div class="chat-avatar">🤖</div>
+                    <div class="chat-avatar">AI</div>
                     <div>
                         <h2 class="modal-title">Tour assistant</h2>
                         <p>Ask me anything about tours!</p>
                     </div>
                 </div>
                 <div class="chat-modal-actions">
-                    <button class="icon-btn" type="button" aria-label="Refresh">⟳</button>
-                    <button class="icon-btn" type="button" data-bs-dismiss="modal" aria-label="Close">×</button>
+                    <button class="icon-btn" type="button" aria-label="Refresh">R</button>
+                    <button class="icon-btn" type="button" data-bs-dismiss="modal" aria-label="Close">x</button>
                 </div>
             </div>
             <div class="modal-body chat-modal-body">
@@ -134,7 +75,7 @@
                             </div>
                         </div>
                         <div class="chat-row assistant">
-                            <div class="chat-avatar small">🤖</div>
+                            <div class="chat-avatar small">AI</div>
                             <div class="chat-bubble chat-bubble-assistant">
                                 <div>Sapa 3N2D co mountain views, local market, va cable car.</div>
                                 <div class="chat-time">10:30 AM</div>
@@ -147,7 +88,7 @@
                             </div>
                         </div>
                         <div class="chat-row assistant">
-                            <div class="chat-avatar small">🤖</div>
+                            <div class="chat-avatar small">AI</div>
                             <div class="chat-bubble chat-bubble-assistant">
                                 <div>Phu Quoc Escape la tour gia cao nhat trong dataset demo nay.</div>
                                 <div class="chat-time">10:31 AM</div>
@@ -177,12 +118,12 @@
                     </aside>
                 </div>
                 <div class="chat-input-shell">
-                    <button class="attach-btn" type="button" aria-label="Attach">⌘</button>
+                    <button class="attach-btn" type="button" aria-label="Attach">+</button>
                     <div class="chat-input-box">
                         <input class="chat-input" value="Ask about tours in the app..." disabled>
                         <div class="chat-counter">0/1000</div>
                     </div>
-                    <button class="send-btn" type="button" aria-label="Send">➤</button>
+                    <button class="send-btn" type="button" aria-label="Send">&gt;</button>
                 </div>
                 <div class="chat-footer-note">AI answers may not be 100% accurate. Please verify important details.</div>
             </div>

@@ -9,17 +9,18 @@
 </head>
 <body>
 <main class="container py-5">
-    <div class="panel p-4 p-md-5 mx-auto" style="max-width: 920px;">
+    <div class="panel admin-form-panel mx-auto">
         <div class="d-flex justify-content-between align-items-start gap-3 mb-4">
             <div>
                 <span class="eyebrow text-dark">Admin form</span>
                 <h1 class="fw-bold mt-2 mb-1" th:text="${pageTitle}">Tour Form</h1>
-                <p class="text-muted mb-0">Use this form to create or update a tour in the demo list.</p>
             </div>
             <a class="btn btn-outline-secondary" th:href="@{/tour/admin}">Back to admin</a>
         </div>
 
-        <form class="row g-3" th:action="@{/tour/admin/save}" method="post" th:object="${tourForm}">
+        <div class="alert alert-warning" th:if="${adminMessage}" th:text="${adminMessage}"></div>
+
+        <form class="row g-3" th:action="@{/tour/admin/save}" method="post" enctype="multipart/form-data" th:object="${tourForm}">
             <div class="col-md-3">
                 <label class="form-label">ID</label>
                 <input class="form-control" th:field="*{id}" placeholder="t5">
@@ -40,17 +41,120 @@
                 <label class="form-label">Rating</label>
                 <input class="form-control" type="number" step="0.1" min="0" max="5" th:field="*{rating}" required>
             </div>
+
+            <div class="col-md-12">
+                <label class="form-label">Image</label>
+                <div class="image-manager"
+                     th:classappend="${tourForm.imageUrl() != null && !tourForm.imageUrl().isBlank() ? 'has-image' : ''}">
+                    <div class="image-preview-card"
+                         th:classappend="${tourForm.imageUrl() == null || tourForm.imageUrl().isBlank() ? 'd-none' : ''}">
+                        <img id="tourImagePreview"
+                             class="upload-preview"
+                             th:src="${tourForm.imageUrl() != null && !tourForm.imageUrl().isBlank() ? tourForm.imageUrl() : ''}"
+                             th:classappend="${tourForm.imageUrl() == null || tourForm.imageUrl().isBlank() ? 'd-none' : ''}"
+                             alt="Tour image preview">
+                        <button class="image-remove"
+                                type="button"
+                                th:classappend="${tourForm.imageUrl() == null || tourForm.imageUrl().isBlank() ? 'd-none' : ''}"
+                                aria-label="Clear image">&times;</button>
+                    </div>
+                    <label class="image-dropzone" for="imageFile">
+                        <span class="upload-empty">
+                            <span class="upload-icon" aria-hidden="true">
+                                <svg viewBox="0 0 24 24" role="img">
+                                    <path d="M12 16V8m0 0-3.2 3.2M12 8l3.2 3.2M20 16.5a4.2 4.2 0 0 0-3.9-5.7A6 6 0 0 0 4.5 12.2 3.8 3.8 0 0 0 5.8 19h12.4a3.1 3.1 0 0 0 1.8-2.5Z"/>
+                                </svg>
+                            </span>
+                            <strong>Upload image</strong>
+                            <span>Drag &amp; drop or click to browse</span>
+                            <small>JPG, PNG up to 5 MB</small>
+                        </span>
+                        <span class="change-image-pill">
+                            <svg viewBox="0 0 24 24" role="img">
+                                <path d="M4 5h16v14H4zM8 13l2.4-2.4 3.8 3.8 1.4-1.4L20 17M8 8.5h.01"/>
+                            </svg>
+                            Change image
+                        </span>
+                        <input id="imageFile" name="imageFile" type="file" accept="image/*">
+                    </label>
+                    <input id="imageUrl" type="hidden" th:field="*{imageUrl}">
+                </div>
+            </div>
+
             <div class="col-md-12">
                 <label class="form-label">Summary</label>
                 <textarea class="form-control" rows="4" th:field="*{summary}" required></textarea>
             </div>
-            <div class="col-12 d-flex gap-2">
-                <button class="btn btn-success btn-lg" type="submit" th:text="${formMode}">Save</button>
-                <a class="btn btn-outline-secondary btn-lg" th:href="@{/tour/admin}">Cancel</a>
+
+            <div class="col-12 form-actions">
+                <div class="d-flex gap-2">
+                    <button class="btn btn-success btn-lg" type="submit" th:text="${formMode}">Save</button>
+                    <a class="btn btn-outline-secondary btn-lg" th:href="@{/tour/admin}">Cancel</a>
+                </div>
+                <div class="cloud-storage-callout">
+                    <div class="cloud-save-row">
+                        <div class="cloud-save-btn">
+                            <svg viewBox="0 0 24 24" role="img">
+                                <path d="M12 16V8m0 0-3.2 3.2M12 8l3.2 3.2M20 16.5a4.2 4.2 0 0 0-3.9-5.7A6 6 0 0 0 4.5 12.2 3.8 3.8 0 0 0 5.8 19h12.4a3.1 3.1 0 0 0 1.8-2.5Z"/>
+                            </svg>
+                            L&#432;u tr&#7919; &#7843;nh tr&#234;n cloud
+                        </div>
+                        <span class="cloud-check" aria-label="Cloud storage ready">
+                            <svg viewBox="0 0 24 24" role="img">
+                                <path d="m7 12 3 3 7-7"/>
+                            </svg>
+                        </span>
+                    </div>
+                    <small id="cloudStatus" class="cloud-status">L&#432;u &#7843;nh l&#234;n Cloud &#273;&#7875; &#273;&#7843;m b&#7843;o an to&#224;n v&#224; truy c&#7853;p t&#7915; m&#7885;i n&#417;i</small>
+                </div>
             </div>
         </form>
     </div>
 </main>
+<script>
+    const preview = document.getElementById('tourImagePreview');
+    const imageUrl = document.getElementById('imageUrl');
+    const imageFile = document.getElementById('imageFile');
+    const cloudStatus = document.getElementById('cloudStatus');
+    const imageRemove = document.querySelector('.image-remove');
+    const imageManager = document.querySelector('.image-manager');
+    const previewCard = document.querySelector('.image-preview-card');
+
+    imageUrl.addEventListener('input', () => {
+        if (imageUrl.value.trim()) {
+            preview.src = imageUrl.value.trim();
+            preview.classList.remove('d-none');
+            imageRemove.classList.remove('d-none');
+            previewCard.classList.remove('d-none');
+            imageManager.classList.add('has-image');
+        }
+    });
+
+    imageFile.addEventListener('change', () => {
+        const file = imageFile.files && imageFile.files[0];
+        if (!file) {
+            return;
+        }
+        preview.src = URL.createObjectURL(file);
+        preview.classList.remove('d-none');
+        imageRemove.classList.remove('d-none');
+        previewCard.classList.remove('d-none');
+        imageManager.classList.add('has-image');
+        cloudStatus.textContent = '\u1ea2nh \u0111\u00e3 s\u1eb5n s\u00e0ng. B\u1ea5m Create/Update \u0111\u1ec3 upload l\u00ean Cloudflare R2.';
+    });
+
+    imageRemove.addEventListener('click', (event) => {
+        event.preventDefault();
+        imageUrl.value = '';
+        imageFile.value = '';
+        preview.src = '';
+        preview.classList.add('d-none');
+        imageRemove.classList.add('d-none');
+        previewCard.classList.add('d-none');
+        imageManager.classList.remove('has-image');
+        cloudStatus.textContent = '\u0110\u00e3 x\u00f3a \u1ea3nh kh\u1ecfi form.';
+    });
+</script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
