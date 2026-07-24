@@ -3,60 +3,111 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Confirmation</title>
+    <title>Booking Confirmed – Dieu Dao Travel</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link th:href="@{/css/app.css}" rel="stylesheet">
 </head>
 <body>
+<nav class="navbar navbar-expand-lg navbar-dark topbar sticky-top">
+    <div class="container">
+        <a class="navbar-brand fw-bold" th:href="@{/}">Dieu Dao Travel</a>
+        <div class="navbar-nav ms-auto">
+            <a class="nav-link" th:href="@{/tour}">Tours</a>
+            <a class="nav-link" th:href="@{/tour/blog}">Blog</a>
+            <a class="nav-link" th:href="@{/ai-chat}">AI Chat</a>
+            <a class="nav-link" th:href="@{/tour/cart}">Cart</a>
+            <a class="nav-link" th:href="@{/tour/wishlist}">Wishlist</a>
+            <a class="btn btn-outline-light btn-sm ms-lg-2" th:href="@{/logout}">Đăng xuất</a>
+        </div>
+    </div>
+</nav>
 <main class="confirmation-page">
     <div class="container">
+
+
+        <div class="checkout-steps-bar" style="max-width:620px;">
+            <div class="checkout-step done">
+                <div class="step-circle">&#10003;</div>
+                <span class="step-label">Choose</span>
+            </div>
+            <div class="checkout-step done">
+                <div class="step-circle">&#10003;</div>
+                <span class="step-label">Cart</span>
+            </div>
+            <div class="checkout-step done">
+                <div class="step-circle">&#10003;</div>
+                <span class="step-label">Payment</span>
+            </div>
+            <div class="checkout-step active">
+                <div class="step-circle">4</div>
+                <span class="step-label">Confirmed</span>
+            </div>
+        </div>
+
         <div class="confirmation-shell">
+
+            <!-- Left: confirmation main -->
             <section class="confirmation-main panel">
+
+
                 <div class="confirmation-mark">
-                    <div class="confirmation-check">✓</div>
-                    <div class="confetti confetti-a"></div>
-                    <div class="confetti confetti-b"></div>
-                    <div class="confetti confetti-c"></div>
-                    <div class="confetti confetti-d"></div>
+                    <div class="confirmation-check">&#10003;</div>
                 </div>
-                <div class="confirmation-pill">Payment success demo</div>
+
+                <div class="confirmation-pill">Payment successful</div>
                 <h1>Booking confirmed!</h1>
-                <p class="confirmation-lead" th:text="${checkoutMessage ?: 'Mock payment approved and booking stored in demo state.'}">
-                    Mock payment approved for Nguyen Van A on Sapa 3N2D via Mock card payment.
+                <p class="confirmation-lead"
+                   th:text="${checkoutMessage ?: 'Mock payment approved and booking stored in demo state.'}">
+                    Mock payment approved.
                 </p>
 
+
                 <div class="confirmation-highlight">
-                    <div class="highlight-icon">🔒</div>
+                    <div class="confirmation-highlight-icon-box">
+                        <span class="conf-lock-icon">Secure</span>
+                    </div>
                     <div>
                         <div class="highlight-title">Your itinerary is locked in</div>
-                        <div class="highlight-text">This is a frontend-only confirmation state for presentation.</div>
+                        <div class="highlight-text">
+                            This is a frontend-only confirmation state for presentation.
+                        </div>
                     </div>
                 </div>
 
+                <!-- Booking detail rows -->
                 <div class="confirmation-details">
                     <div class="detail-row">
-                        <div class="detail-icon">🎟</div>
+                        <div class="detail-icon conf-icon-circle">T</div>
                         <div class="detail-copy">
-                            <div class="detail-label">Tour</div>
-                            <div class="detail-value" th:text="${checkoutTour != null ? checkoutTour.name() : 'Sapa 3N2D'}">Sapa 3N2D</div>
+                            <div class="detail-label">Tours</div>
+                            <div class="detail-value">
+                                <div th:each="item : ${checkoutItems}"
+                                     th:text="${item.tourName() + ' (' + item.travelers() + ' pax)'}">
+                                    Sapa 3N2D (2 pax)
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="detail-row">
-                        <div class="detail-icon">👤</div>
+                        <div class="detail-icon conf-icon-circle">P</div>
                         <div class="detail-copy">
                             <div class="detail-label">Travelers</div>
-                            <div class="detail-value" th:text="${checkoutTravelers ?: 2}">2</div>
+                            <div class="detail-value"
+                                 th:text="${checkoutTravelers ?: 2}">2</div>
                         </div>
                     </div>
                     <div class="detail-row">
-                        <div class="detail-icon">✉</div>
+                        <div class="detail-icon conf-icon-circle">@</div>
                         <div class="detail-copy">
                             <div class="detail-label">Email</div>
-                            <div class="detail-value" th:text="${checkoutEmail ?: 'demo@example.com'}">demo@example.com</div>
+                            <div class="detail-value"
+                                 th:text="${checkoutEmail ?: 'demo@example.com'}">
+                                demo@example.com
+                            </div>
                         </div>
                     </div>
                     <div class="detail-row">
-                        <div class="detail-icon">➤</div>
+                        <div class="detail-icon conf-icon-circle">N</div>
                         <div class="detail-copy">
                             <div class="detail-label">Next action</div>
                             <div class="detail-value">Send voucher email</div>
@@ -70,38 +121,50 @@
                 </div>
             </section>
 
+            <!-- Right: payment summary sidebar -->
             <aside class="confirmation-side">
+
                 <div class="panel summary-card">
+
+                    <!-- Payment summary -->
                     <div class="summary-head">
                         <div class="summary-title">
-                            <span class="summary-icon">🧾</span>
+                            <div class="conf-icon-circle conf-icon-sm">R</div>
                             <h2>Payment summary</h2>
                         </div>
                     </div>
 
-                    <div class="summary-line">
-                        <span>Tour price (2 x $429)</span>
-                        <span>$858.00</span>
+                    <div class="summary-line" th:each="item : ${checkoutItems}">
+                        <span th:text="${item.tourName() + ' (' + item.travelers() + ' x $' + item.unitPrice() + ')'}">
+                            Sapa 3N2D (2 x $429)
+                        </span>
+                        <span th:text="'$' + ${#numbers.formatDecimal(item.subtotal(), 1, 2)}">$858.00</span>
                     </div>
                     <div class="summary-line">
-                        <span>Taxes & fees <span class="mini-info">i</span></span>
-                        <span>$34.00</span>
+                        <span>Taxes &amp; fees (4%)</span>
+                        <span th:text="'$' + ${#numbers.formatDecimal(checkoutTax, 1, 2)}">$34.00</span>
                     </div>
-                    <div class="summary-line discount">
-                        <span>Discount</span>
-                        <span>-$60.00</span>
+                    <div class="summary-line discount" th:if="${checkoutDiscount > 0}">
+                        <span>Group discount (4+ travelers)</span>
+                        <span th:text="'-$' + ${#numbers.formatDecimal(checkoutDiscount, 1, 2)}">-$60.00</span>
                     </div>
-
+                    <div class="summary-line discount" th:if="${checkoutPromoDiscount != null and checkoutPromoDiscount > 0}">
+                        <span th:text="'Discount code ' + ${checkoutPromoCode}">Discount code</span>
+                        <span th:text="'-$' + ${#numbers.formatDecimal(checkoutPromoDiscount, 1, 2)}">-$0.00</span>
+                    </div>
                     <div class="summary-total">
                         <span>Total paid</span>
-                        <span>$832.00 USD</span>
+                        <span th:text="'$' + ${#numbers.formatDecimal(checkoutTotal, 1, 2)} + ' USD'">
+                            $892.32 USD
+                        </span>
                     </div>
 
                     <hr class="summary-divider">
 
+                    <!-- Payment method -->
                     <div class="summary-section">
                         <div class="summary-title">
-                            <span class="summary-icon">💳</span>
+                            <div class="conf-icon-circle conf-icon-sm">$</div>
                             <h3>Payment method</h3>
                         </div>
                         <div class="payment-method-row">
@@ -110,37 +173,52 @@
                                 <span class="card-dot yellow"></span>
                             </div>
                             <div class="payment-copy">
-                                <div>Mock card</div>
-                                <div class="masked-card">.... .... .... 4242</div>
+                                <div th:text="${checkoutPaymentMethod}">Mock card payment</div>
+                                <div class="masked-card"
+                                     th:if="${checkoutPaymentMethod == 'Mock card payment'}">
+                                    .... .... .... 4242
+                                </div>
+                                <div class="masked-card"
+                                     th:unless="${checkoutPaymentMethod == 'Mock card payment'}">
+                                    Sandbox reference only
+                                </div>
                             </div>
                             <span class="approved-badge">Approved</span>
                         </div>
                         <div class="transaction-grid">
                             <div class="transaction-label">Transaction ID</div>
-                            <div class="transaction-value">MOCK-1715912345678</div>
+                            <div class="transaction-value"
+                                 th:text="${checkoutTransactionId}">MOCK-1715912345678</div>
                             <div class="transaction-label">Paid on</div>
-                            <div class="transaction-value">May 17, 2024 10:30 AM</div>
+                            <div class="transaction-value"
+                                 th:text="${checkoutPaidOn}">May 17, 2024 10:30 AM</div>
                         </div>
                     </div>
 
-                    <div class="secure-box">
+                    <!-- Secure notice -->
+                    <div class="secure-box mt-3">
                         <div class="secure-title">
-                            <span class="secure-icon">🛡</span>
+                            <span class="secure-icon">&#10003;</span>
                             <span>Secure payment</span>
                         </div>
-                        <p>This is a mock payment for demo purposes only. No real transaction was processed.</p>
+                        <p>This is a mock payment for demo purposes only.
+                           No real transaction was processed.</p>
                     </div>
                 </div>
 
+                <!-- Help card -->
                 <div class="panel help-card">
                     <div class="help-title">
-                        <span class="help-icon">🎧</span>
+                        <div class="conf-icon-circle conf-icon-sm">?</div>
                         <h3>Need help?</h3>
                     </div>
                     <p>Contact our support team if you have any questions about your booking.</p>
-                    <a href="javascript:void(0)" class="help-link">Contact support <span>→</span></a>
+                    <a href="javascript:void(0)" class="help-link">
+                        Contact support &rarr;
+                    </a>
                 </div>
             </aside>
+
         </div>
     </div>
 </main>

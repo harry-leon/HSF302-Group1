@@ -2004,3 +2004,343 @@ body {
         text-align: left;
     }
 }
+
+/* ========================================
+   CHECKOUT STEPS PROGRESS BAR
+   ======================================== */
+.checkout-steps-bar {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 0;
+    padding: 1.8rem 0 2rem;
+    max-width: 480px;
+    margin: 0 auto;
+}
+
+.checkout-step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    position: relative;
+    flex: 1;
+}
+
+/* Connector line between steps */
+.checkout-step:not(:last-child)::after {
+    content: "";
+    position: absolute;
+    top: 1.05rem;
+    left: calc(50% + 1.15rem);
+    width: calc(100% - 2.3rem);
+    height: 2px;
+    background: #dde3e8;
+    z-index: 0;
+}
+
+.checkout-step.done:not(:last-child)::after {
+    background: linear-gradient(90deg, #1a8a54, #2aa262);
+}
+
+.step-circle {
+    width: 2.1rem;
+    height: 2.1rem;
+    border-radius: 999px;
+    display: grid;
+    place-items: center;
+    font-weight: 800;
+    font-size: 0.9rem;
+    position: relative;
+    z-index: 1;
+    border: 2px solid #dde3e8;
+    background: #fff;
+    color: #9aa6af;
+    transition: background 0.2s, border-color 0.2s, color 0.2s;
+}
+
+.checkout-step.active .step-circle {
+    background: linear-gradient(135deg, #17854f, #26a159);
+    border-color: #17854f;
+    color: #fff;
+    box-shadow: 0 6px 18px rgba(23, 133, 79, 0.28);
+}
+
+.checkout-step.done .step-circle {
+    background: #edf8f1;
+    border-color: #2aa262;
+    color: #1a8a54;
+    font-size: 1rem;
+}
+
+.step-label {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: #9aa6af;
+    white-space: nowrap;
+    text-align: center;
+}
+
+.checkout-step.active .step-label {
+    color: #17854f;
+    font-weight: 700;
+}
+
+.checkout-step.done .step-label {
+    color: #2aa262;
+}
+
+/* ========================================
+   STEP PILL SIDEBAR (booking page sidebar)
+   ======================================== */
+.booking-steps-inline {
+    display: flex;
+    gap: 0.45rem;
+    flex-wrap: wrap;
+    margin-top: 1rem;
+}
+
+.step-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.35rem 0.75rem;
+    border-radius: 999px;
+    background: #f0f4f7;
+    color: #8a97a3;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.step-pill.active {
+    background: linear-gradient(135deg, #17854f, #26a159);
+    color: #fff;
+}
+
+.step-pill.done {
+    background: #edf8f1;
+    color: #1a8a54;
+}
+
+.step-pill-num {
+    display: inline-grid;
+    place-items: center;
+    width: 1.35rem;
+    height: 1.35rem;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 800;
+    background: rgba(255, 255, 255, 0.3);
+}
+
+/* ========================================
+   CONFIRMATION — CSS ICON CIRCLES (no emoji)
+   ======================================== */
+.conf-icon-circle {
+    width: 2.8rem;
+    height: 2.8rem;
+    border-radius: 999px;
+    background: #edf7f1;
+    border: 1px solid rgba(15, 139, 95, 0.14);
+    display: grid;
+    place-items: center;
+    font-size: 0.82rem;
+    font-weight: 800;
+    color: #1a8a54;
+    letter-spacing: 0;
+    flex-shrink: 0;
+}
+
+.conf-icon-sm {
+    width: 2.1rem;
+    height: 2.1rem;
+    font-size: 0.72rem;
+}
+
+.confirmation-highlight-icon-box {
+    flex: 0 0 auto;
+}
+
+.conf-lock-icon {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.3rem 0.6rem;
+    border-radius: 0.55rem;
+    background: rgba(15, 139, 95, 0.1);
+    color: #1d8d5d;
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+}
+
+/* ========================================
+   WISHLIST PAGE
+   ======================================== */
+.wishlist-page {
+    padding: 2rem 0 3.5rem;
+}
+
+.wishlist-header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.wishlist-header h1 {
+    font-size: clamp(1.8rem, 3vw, 2.6rem);
+    font-weight: 800;
+    letter-spacing: -0.04em;
+    margin: 0;
+}
+
+.wishlist-count {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.3rem 0.75rem;
+    border-radius: 999px;
+    background: #edf8f1;
+    color: #1a8a54;
+    font-weight: 700;
+    font-size: 0.9rem;
+}
+
+.wishlist-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.35rem;
+}
+
+.wishlist-card {
+    background: #fff;
+    border-radius: 1.3rem;
+    box-shadow: 0 16px 36px rgba(16, 33, 43, 0.08);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.wishlist-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 24px 48px rgba(16, 33, 43, 0.12);
+}
+
+.wishlist-card-image {
+    height: 180px;
+    background-size: cover;
+    background-position: center;
+    position: relative;
+}
+
+.wishlist-card-body {
+    padding: 1.1rem 1.1rem 1rem;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.wishlist-card-name {
+    font-size: 1.2rem;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    margin: 0.5rem 0 0.3rem;
+}
+
+.wishlist-card-price {
+    color: var(--brand);
+    font-size: 1.35rem;
+    font-weight: 800;
+    margin-bottom: 1rem;
+}
+
+.wishlist-card-actions {
+    display: flex;
+    gap: 0.6rem;
+    margin-top: auto;
+}
+
+.btn-wishlist-add-cart {
+    flex: 1;
+    padding: 0.65rem 1rem;
+    border-radius: 0.65rem;
+    background: linear-gradient(135deg, #17854f, #26a159);
+    color: #fff;
+    font-weight: 700;
+    font-size: 0.95rem;
+    border: 0;
+    text-align: center;
+    display: inline-block;
+}
+
+.btn-wishlist-add-cart:hover { color: #fff; }
+
+.btn-wishlist-remove {
+    padding: 0.65rem 0.9rem;
+    border-radius: 0.65rem;
+    border: 1px solid rgba(220, 53, 69, 0.35);
+    color: #b02a37;
+    background: #fff;
+    font-weight: 600;
+    font-size: 0.9rem;
+    white-space: nowrap;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+}
+
+.wishlist-empty {
+    text-align: center;
+    padding: 4rem 2rem;
+}
+
+.wishlist-empty-icon {
+    width: 5rem;
+    height: 5rem;
+    border-radius: 999px;
+    background: #edf8f1;
+    display: grid;
+    place-items: center;
+    margin: 0 auto 1.4rem;
+    font-size: 2.2rem;
+    color: #2aa262;
+    font-weight: 800;
+    border: 2px solid rgba(15, 139, 95, 0.18);
+}
+
+.wishlist-empty h2 {
+    font-size: 1.6rem;
+    font-weight: 800;
+    margin-bottom: 0.5rem;
+}
+
+.wishlist-empty p {
+    color: var(--muted);
+    font-size: 1.05rem;
+    margin-bottom: 1.4rem;
+    min-height: auto;
+}
+
+/* Save button on tour card */
+.btn-save-tour {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.42rem 0.8rem;
+    border-radius: 0.55rem;
+    border: 1px solid rgba(16,33,43,0.18);
+    color: #4a5560;
+    background: #fff;
+    font-size: 0.82rem;
+    font-weight: 600;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+
+.btn-save-tour:hover {
+    background: #edf8f1;
+    border-color: rgba(15,139,95,0.45);
+    color: #1a8a54;
+}

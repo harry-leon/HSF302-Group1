@@ -15,6 +15,8 @@
             <a class="nav-link active" th:href="@{/tour}">Tours</a>
             <a class="nav-link" th:href="@{/tour/blog}">Blog</a>
             <a class="nav-link" th:href="@{/ai-chat}">AI Chat</a>
+            <a class="nav-link" th:href="@{/tour/cart}">Cart</a>
+            <a class="nav-link" th:href="@{/tour/wishlist}">Wishlist</a>
             <a class="btn btn-outline-light btn-sm ms-lg-2" th:href="@{/logout}">Dang xuat</a>
         </div>
     </div>
@@ -107,9 +109,12 @@
                     </div>
                 </div>
 
-                <a class="btn btn-wishlist" href="javascript:void(0)">
-                    Add to wishlist
-                </a>
+                <form th:action="@{/tour/wishlist/add}" method="post" style="margin:0;">
+                    <input type="hidden" name="tourId" th:value="${tour.id()}">
+                    <button type="submit" class="btn btn-wishlist" style="width:100%;">
+                        Add to wishlist
+                    </button>
+                </form>
             </aside>
         </div>
     </div>

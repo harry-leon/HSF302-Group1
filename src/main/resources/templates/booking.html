@@ -15,6 +15,8 @@
             <a class="nav-link active" th:href="@{/tour}">Tours</a>
             <a class="nav-link" th:href="@{/tour/blog}">Blog</a>
             <a class="nav-link" th:href="@{/ai-chat}">AI Chat</a>
+            <a class="nav-link" th:href="@{/tour/cart}">Cart</a>
+            <a class="nav-link" th:href="@{/tour/wishlist}">Wishlist</a>
             <a class="btn btn-outline-light btn-sm ms-lg-2" th:href="@{/logout}">Đăng xuất</a>
         </div>
     </div>
@@ -54,44 +56,28 @@
                     <div class="booking-price" th:text="${'$' + tour.price()}">$429</div>
                 </div>
                 <div class="progress-steps booking-steps">
-                    <div class="step active">1. Details</div>
-                    <div class="step">2. Payment</div>
-                    <div class="step">3. Confirm</div>
+                    <div class="step active">1. Choose</div>
+                    <div class="step">2. Cart</div>
+                    <div class="step">3. Payment</div>
                 </div>
             </aside>
 
             <section class="panel booking-form-card">
                 <div class="booking-form-head">
-                    <h2>1. Details</h2>
-                    <p>Please provide your booking information.</p>
+                    <h2>1. Choose travelers</h2>
+                    <p>Pick how many travelers, then add this tour to your cart.</p>
                 </div>
 
-                <form class="booking-form-grid" th:action="@{/tour/checkout}" method="post">
+                <form class="booking-form-grid" th:action="@{/tour/cart/add}" method="post">
                     <input type="hidden" name="tourId" th:value="${tour.id()}">
 
-                    <div class="form-field">
-                        <label class="form-label">Full name</label>
-                        <input class="form-control booking-control" name="fullName" value="Nguyen Van A" required>
-                    </div>
-                    <div class="form-field">
-                        <label class="form-label">Email</label>
-                        <input class="form-control booking-control" type="email" name="email" value="demo@example.com" required>
-                    </div>
-                    <div class="form-field travelers-field">
+                    <div class="form-field travelers-field full-width">
                         <label class="form-label">Travelers</label>
                         <div class="traveler-stepper">
                             <button type="button" class="stepper-btn" disabled>−</button>
                             <input class="stepper-input" type="number" min="1" max="9" name="travelers" value="2" required>
                             <button type="button" class="stepper-btn" disabled>+</button>
                         </div>
-                    </div>
-                    <div class="form-field">
-                        <label class="form-label">Payment method</label>
-                        <select class="form-select booking-control booking-select" name="paymentMethod">
-                            <option>Mock card payment</option>
-                            <option>VNPay sandbox</option>
-                            <option>Momo sandbox</option>
-                        </select>
                     </div>
                     <div class="form-field full-width">
                         <label class="form-label">Note (optional)</label>
@@ -101,13 +87,13 @@
                     <div class="booking-divider-line full-width"></div>
 
                     <div class="booking-actions full-width">
-                        <button class="btn btn-success btn-lg booking-submit" type="submit">Proceed to payment <span>→</span></button>
+                        <button class="btn btn-success btn-lg booking-submit" type="submit">Add to cart <span>→</span></button>
                         <a class="btn btn-outline-secondary btn-lg booking-back" th:href="@{/tour}">Back</a>
                     </div>
 
                     <div class="booking-security full-width">
                         <span class="security-icon">✔</span>
-                        <span>Your information is secure and will only be used for this demo.</span>
+                        <span>Your full name, email, and payment method are collected on the next step.</span>
                     </div>
                 </form>
             </section>

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Edit Cart Item – Dieu Dao Travel</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link th:href="@{/css/app.css}" rel="stylesheet">
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark topbar sticky-top">
+    <div class="container">
+        <a class="navbar-brand fw-bold" th:href="@{/}">Dieu Dao Travel</a>
+        <div class="navbar-nav ms-auto">
+            <a class="nav-link" th:href="@{/tour}">Tours</a>
+            <a class="nav-link" th:href="@{/tour/blog}">Blog</a>
+            <a class="nav-link" th:href="@{/tour(chat=1)}">AI Chat</a>
+            <a class="nav-link active" th:href="@{/tour/cart}">Cart</a>
+            <a class="nav-link" th:href="@{/tour/wishlist}">Wishlist</a>
+            <a class="btn btn-outline-light btn-sm ms-lg-2" th:href="@{/logout}">Dang xuat</a>
+        </div>
+    </div>
+</nav>
+
+<main class="booking-page">
+    <div class="container">
+
+        <nav class="tour-breadcrumb" aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item"><a th:href="@{/}">Home</a></li>
+                <li class="breadcrumb-item"><a th:href="@{/tour/cart}">Cart</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Edit</li>
+            </ol>
+        </nav>
+
+        <div class="booking-shell">
+            <aside class="panel booking-side-card">
+                <h1 th:text="${item.tourName()}">Sapa 3N2D</h1>
+                <div class="booking-price-box">
+                    <div class="booking-price-label">Price / traveler</div>
+                    <div class="booking-price" th:text="${'$' + item.unitPrice()}">$429</div>
+                </div>
+            </aside>
+
+            <section class="panel booking-form-card">
+                <div class="booking-form-head">
+                    <h2>Edit cart item</h2>
+                    <p>UI preview only - changes here are not saved.</p>
+                </div>
+
+                <form class="booking-form-grid">
+                    <div class="form-field travelers-field full-width">
+                        <label class="form-label">Travelers</label>
+                        <div class="traveler-stepper">
+                            <button type="button" class="stepper-btn" disabled>&minus;</button>
+                            <input class="stepper-input" type="number" min="1" max="9" th:value="${item.travelers()}" disabled>
+                            <button type="button" class="stepper-btn" disabled>+</button>
+                        </div>
+                    </div>
+
+                    <div class="booking-divider-line full-width"></div>
+
+                    <div class="booking-actions full-width">
+                        <a class="btn btn-success btn-lg booking-submit" th:href="@{/tour/cart}">Save</a>
+                        <a class="btn btn-outline-secondary btn-lg booking-back" th:href="@{/tour/cart}">Cancel</a>
+                    </div>
+
+                    <div class="booking-security full-width">
+                        <span class="security-icon">&#10003;</span>
+                        <span>Demo screen - editing here doesn't change your cart yet.</span>
+                    </div>
+                </form>
+            </section>
+        </div>
+    </div>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Payment – Dieu Dao Travel</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link th:href="@{/css/app.css}" rel="stylesheet">
+    <style>
+        .pay-page { padding: 2rem 0 4rem; }
+        .pay-wrap  { max-width: 680px; margin: 0 auto; display: flex; flex-direction: column; gap: 1.1rem; }
+
+        /* Each numbered section box */
+        .pay-section {
+            background: #fff;
+            border: 1px solid rgba(16,33,43,0.09);
+            border-radius: 1.2rem;
+            padding: 1.4rem 1.5rem;
+        }
+        .pay-section-head {
+            display: flex;
+            align-items: center;
+            gap: 0.85rem;
+            margin-bottom: 1.1rem;
+        }
+        .pay-section-num {
+            width: 2rem; height: 2rem;
+            border-radius: 999px;
+            background: linear-gradient(135deg, #17854f, #26a159);
+            color: #fff;
+            font-size: 0.9rem;
+            font-weight: 800;
+            display: grid;
+            place-items: center;
+            flex-shrink: 0;
+        }
+        .pay-section-title {
+            font-size: 1rem;
+            font-weight: 800;
+            color: #10212b;
+            margin: 0;
+        }
+        .pay-section-sub {
+            font-size: 0.85rem;
+            color: #7a8a95;
+            margin-top: 0.1rem;
+        }
+
+        /* Fields inside sections */
+        .pay-fields { display: flex; flex-direction: column; gap: 0.85rem; }
+        .pay-field label { font-size: 0.88rem; font-weight: 600; color: #3d4e5a; margin-bottom: 0.3rem; }
+        .pay-field input,
+        .pay-field select {
+            border: 1px solid rgba(16,33,43,0.16);
+            border-radius: 0.65rem;
+            padding: 0.6rem 0.9rem;
+            font-size: 0.95rem;
+            width: 100%;
+            background: #fafcfb;
+            transition: border-color 0.15s, box-shadow 0.15s;
+        }
+        .pay-field input:focus,
+        .pay-field select:focus {
+            border-color: #1a8a54;
+            box-shadow: 0 0 0 3px rgba(26,138,84,0.1);
+            outline: none;
+        }
+        .pay-field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.85rem; }
+
+        /* Discount code box */
+        .discount-row { display: flex; gap: 0.6rem; align-items: stretch; }
+        .discount-row input { flex: 1; }
+        .discount-hint { font-size: 0.78rem; color: #7a8a95; margin-top: 0.4rem; line-height: 1.45; }
+        .discount-hint strong { color: #1a8a54; }
+
+        /* Payment method cards */
+        .method-options { display: flex; flex-direction: column; gap: 0.55rem; }
+        .method-label {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1rem;
+            border: 1.5px solid rgba(16,33,43,0.12);
+            border-radius: 0.8rem;
+            cursor: pointer;
+            transition: border-color 0.15s, background 0.15s;
+        }
+        .method-label:has(input:checked) {
+            border-color: #1a8a54;
+            background: #f3fbf6;
+        }
+        .method-label input[type="radio"] { accent-color: #1a8a54; width: 1rem; height: 1rem; }
+        .method-name { font-weight: 700; font-size: 0.95rem; }
+        .method-desc { font-size: 0.8rem; color: #7a8a95; }
+
+        /* Order summary rows */
+        .order-rows { display: flex; flex-direction: column; gap: 0; }
+        .order-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.65rem 0;
+            border-bottom: 1px solid rgba(16,33,43,0.06);
+            gap: 1rem;
+        }
+        .order-item:last-child { border-bottom: none; }
+        .order-item-name { font-weight: 600; font-size: 0.95rem; }
+        .order-item-meta { font-size: 0.82rem; color: #7a8a95; }
+        .order-item-price { font-weight: 700; white-space: nowrap; }
+        .order-divider { border-color: rgba(16,33,43,0.09); margin: 0.75rem 0; }
+        .order-fee-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.92rem;
+            color: #4a5560;
+            padding: 0.25rem 0;
+        }
+        .order-fee-row.discount { color: #1a8a54; }
+        .order-total-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            font-weight: 800;
+            font-size: 1.1rem;
+            padding-top: 0.6rem;
+            margin-top: 0.3rem;
+            border-top: 2px solid rgba(16,33,43,0.09);
+        }
+        .order-total-row span:last-child { color: #1a8a54; font-size: 1.3rem; }
+
+        /* Submit button section */
+        .pay-submit-box { padding: 0; background: transparent; border: none; }
+        .btn-pay-now {
+            width: 100%;
+            padding: 1rem;
+            border-radius: 0.9rem;
+            background: linear-gradient(135deg, #17854f, #26a159);
+            color: #fff;
+            font-weight: 800;
+            font-size: 1.05rem;
+            border: 0;
+            box-shadow: 0 8px 24px rgba(23,133,79,0.22);
+            letter-spacing: 0.01em;
+            transition: opacity 0.15s;
+        }
+        .btn-pay-now:hover { opacity: 0.92; color: #fff; }
+        .pay-back-link {
+            display: block;
+            text-align: center;
+            margin-top: 0.75rem;
+            color: #7a8a95;
+            font-size: 0.9rem;
+            text-decoration: none;
+        }
+        .pay-back-link:hover { color: #10212b; }
+        .pay-secure {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            justify-content: center;
+            margin-top: 0.9rem;
+            font-size: 0.82rem;
+            color: #8a97a3;
+        }
+        .pay-secure-dot {
+            width: 1rem; height: 1rem;
+            border-radius: 999px;
+            background: #edf8f1;
+            border: 1px solid rgba(15,139,95,0.25);
+            display: grid;
+            place-items: center;
+            font-size: 0.6rem;
+            color: #1a8a54;
+            font-weight: 800;
+        }
+    </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark topbar sticky-top">
+    <div class="container">
+        <a class="navbar-brand fw-bold" th:href="@{/}">Dieu Dao Travel</a>
+        <div class="navbar-nav ms-auto">
+            <a class="nav-link" th:href="@{/tour}">Tours</a>
+            <a class="nav-link" th:href="@{/tour/blog}">Blog</a>
+            <a class="nav-link" th:href="@{/tour(chat=1)}">AI Chat</a>
+            <a class="nav-link" th:href="@{/tour/cart}">Cart</a>
+            <a class="nav-link" th:href="@{/tour/wishlist}">Wishlist</a>
+            <a class="btn btn-outline-light btn-sm ms-lg-2" th:href="@{/logout}">Dang xuat</a>
+        </div>
+    </div>
+</nav>
+
+<main class="pay-page">
+    <div class="container">
+
+        <!-- 5-step progress bar, step 3 active -->
+        <div class="checkout-steps-bar" style="max-width:700px;">
+            <div class="checkout-step done">
+                <div class="step-circle">&#10003;</div>
+                <span class="step-label">Choose</span>
+            </div>
+            <div class="checkout-step done">
+                <div class="step-circle">&#10003;</div>
+                <span class="step-label">Cart</span>
+            </div>
+            <div class="checkout-step active">
+                <div class="step-circle">3</div>
+                <span class="step-label">Payment</span>
+            </div>
+            <div class="checkout-step">
+                <div class="step-circle">4</div>
+                <span class="step-label">Scan &amp; Pay</span>
+            </div>
+            <div class="checkout-step">
+                <div class="step-circle">5</div>
+                <span class="step-label">Done</span>
+            </div>
+        </div>
+
+        <!-- Error alerts -->
+        <div style="max-width:680px; margin:0 auto 1rem;">
+            <div class="alert alert-danger" th:if="${bookingError}" th:text="${bookingError}"></div>
+        </div>
+
+        <form th:action="@{/tour/checkout}" method="post">
+        <div class="pay-wrap">
+
+            <!-- SECTION 1: Contact info -->
+            <div class="pay-section">
+                <div class="pay-section-head">
+                    <div class="pay-section-num">1</div>
+                    <div>
+                        <div class="pay-section-title">Contact information</div>
+                        <div class="pay-section-sub">We'll send your booking confirmation here</div>
+                    </div>
+                </div>
+                <div class="pay-fields">
+                    <div class="pay-field-row">
+                        <div class="pay-field">
+                            <label>Full name *</label>
+                            <input type="text" name="fullName" value="Nguyen Van A"
+                                   placeholder="Ho va ten" required>
+                        </div>
+                        <div class="pay-field">
+                            <label>Email *</label>
+                            <input type="email" name="email" value="demo@example.com"
+                                   placeholder="email@example.com" required>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+
+            <div class="pay-section">
+                <div class="pay-section-head">
+                    <div class="pay-section-num">2</div>
+                    <div>
+                        <div class="pay-section-title">Discount code</div>
+                        <div class="pay-section-sub">Have a promo code? Enter it below</div>
+                    </div>
+                </div>
+                <div class="pay-field">
+                    <div class="discount-row">
+                        <input type="text" name="discountCode"
+                               placeholder="e.g. DIEUDAO10"
+                               style="text-transform:uppercase; letter-spacing:0.05em;">
+                    </div>
+                    <div class="discount-hint">
+                        Demo codes: <strong>DIEUDAO10</strong> (10% off) &nbsp;|&nbsp;
+                        <strong>WELCOME5</strong> (5% off)
+                    </div>
+                </div>
+            </div>
+
+
+
+
+            <div class="pay-section">
+                <div class="pay-section-head">
+                    <div class="pay-section-num">3</div>
+                    <div>
+                        <div class="pay-section-title">Payment method</div>
+                        <div class="pay-section-sub">Choose how you want to pay</div>
+                    </div>
+                </div>
+                <div class="method-options">
+                    <label class="method-label">
+                        <input type="radio" name="paymentMethod" value="Mock card payment" checked>
+                        <div>
+                            <div class="method-name">Mock card payment</div>
+                            <div class="method-desc">Simulated card — no real charge</div>
+                        </div>
+                    </label>
+                    <label class="method-label">
+                        <input type="radio" name="paymentMethod" value="VNPay sandbox">
+                        <div>
+                            <div class="method-name">VNPay sandbox</div>
+                            <div class="method-desc">VNPay QR / ATM (demo environment)</div>
+                        </div>
+                    </label>
+                    <label class="method-label">
+                        <input type="radio" name="paymentMethod" value="Momo sandbox">
+                        <div>
+                            <div class="method-name">Momo sandbox</div>
+                            <div class="method-desc">Momo e-wallet (demo environment)</div>
+                        </div>
+                    </label>
+                </div>
+            </div>
+
+
+
+
+
+            <div class="pay-section">
+                <div class="pay-section-head">
+                    <div class="pay-section-num">4</div>
+                    <div>
+                        <div class="pay-section-title">Order summary</div>
+                        <div class="pay-section-sub">Review before you confirm</div>
+                    </div>
+                </div>
+                <div class="order-rows">
+                    <div class="order-item" th:each="item : ${cartItems}">
+                        <div>
+                            <div class="order-item-name" th:text="${item.tourName()}">Sapa 3N2D</div>
+                            <div class="order-item-meta"
+                                 th:text="${item.travelers() + ' traveler(s) x $' + item.unitPrice()}">
+                                2 traveler(s) x $429
+                            </div>
+                        </div>
+                        <div class="order-item-price"
+                             th:text="'$' + ${#numbers.formatDecimal(item.subtotal(), 1, 2)}">
+                            $858.00
+                        </div>
+                    </div>
+                </div>
+                <hr class="order-divider">
+                <div class="order-fee-row">
+                    <span>Subtotal</span>
+                    <span th:text="'$' + ${#numbers.formatDecimal(cartSubtotal, 1, 2)}">$0.00</span>
+                </div>
+                <div class="order-fee-row">
+                    <span>Taxes &amp; fees (4%)</span>
+                    <span th:text="'$' + ${#numbers.formatDecimal(cartTax, 1, 2)}">$0.00</span>
+                </div>
+                <div class="order-fee-row discount" th:if="${cartDiscount > 0}">
+                    <span>Group discount (7% off, 4+ travelers)</span>
+                    <span th:text="'-$' + ${#numbers.formatDecimal(cartDiscount, 1, 2)}">-$0.00</span>
+                </div>
+                <div class="order-fee-row" style="opacity:0.6; font-size:0.82rem;"
+                     th:if="${cartDiscount == 0}">
+                    <span>Add 4+ travelers to unlock 7% group discount</span>
+                </div>
+                <div class="order-total-row">
+                    <span>Total</span>
+                    <span th:text="'$' + ${#numbers.formatDecimal(cartTotal, 1, 2)} + ' USD'">
+                        $0.00 USD
+                    </span>
+                </div>
+            </div>
+
+            <!-- SUBMIT -->
+            <div class="pay-submit-box">
+                <button type="submit" class="btn-pay-now">
+                    Continue to Scan &amp; Pay &rarr;
+                </button>
+                <a class="pay-back-link" th:href="@{/tour/cart}">&larr; Back to cart</a>
+                <div class="pay-secure">
+                    <span class="pay-secure-dot">&#10003;</span>
+                    Demo only — no real payment is processed
+                </div>
+            </div>
+
+        </div>
+        </form>
+    </div>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
